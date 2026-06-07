@@ -40,19 +40,6 @@ app.use("/", orderRoutes);
 
 
 
-// app.use((req,res,next) => {
-//     res.locals.user =  null; 
-//     next();
-// });
-
-
-// app.get("/", (req, res) => {
-
-//     res.render("index", {
-//         user: req.session.user
-//     });
-
-// });
 
 
 
@@ -481,8 +468,19 @@ app.get(
 });
 
 
-const PORT = 3000;
+// const PORT = 3000;
+
+// app.listen(PORT, () => {
+//     console.log(`Server running on port ${PORT}`);
+// });
+
+
+const PORT =
+process.env.PORT || 3000;
 
 app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
+
+    console.log(
+        `Server running on ${PORT}`
+    );
 });
