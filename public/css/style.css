@@ -1382,6 +1382,8 @@ table img{
 }
 
 
+
+
 /* =========================
    MOBILE RESPONSIVE
 ========================= */
@@ -1420,6 +1422,17 @@ table img{
 
         text-align: center;
     }
+
+
+
+    .order-status{
+
+    margin-top: 10px;
+
+    font-weight: bold;
+
+    color: green;
+}
 
     .hero h1{
 

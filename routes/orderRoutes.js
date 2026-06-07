@@ -33,10 +33,7 @@ router.get(
 
 /* PLACE ORDER */
 
-// router.post(
-//     "/place-order",
-//     placeOrder
-// );
+
 
 router.post(
     "/place-order",
@@ -46,12 +43,7 @@ router.post(
     placeOrder
 );
 
-/* ORDERS */
 
-// router.get(
-//     "/orders",
-//     userOrders
-// );
 
 router.get(
     "/orders",

@@ -399,6 +399,44 @@ app.get(
 });
 
 
+
+app.post(
+
+    "/admin/orders/status/:id",
+
+    isAdmin,
+
+    async (req, res) => {
+
+    try {
+
+        await Order.findByIdAndUpdate(
+
+            req.params.id,
+
+            {
+
+                status:
+                req.body.status
+            }
+        );
+
+        res.redirect(
+            "/admin/orders"
+        );
+
+    } catch (error) {
+
+        console.log(error);
+    }
+
+});
+
+
+
+
+
+
 /* ADMIN USERS */
 
 app.get(

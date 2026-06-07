@@ -55,6 +55,54 @@
             <% orders.forEach(order => { %>
 
                 <div class="order-card">
+ 
+
+
+
+                <form
+action="/admin/orders/status/<%= order._id %>"
+method="POST">
+
+    <select name="status">
+
+        <option value="Pending">
+
+            Pending
+
+        </option>
+
+        <option value="Processing">
+
+            Processing
+
+        </option>
+
+        <option value="Shipped">
+
+            Shipped
+
+        </option>
+
+        <option value="Delivered">
+
+            Delivered
+
+        </option>
+
+    </select>
+
+    <button type="submit">
+
+        Update
+
+    </button>
+
+</form>
+
+
+
+
+
 
                     <h2>
 
