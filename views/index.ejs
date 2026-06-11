@@ -1,13 +1,4 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <meta
-name="viewport"
-content="width=device-width, initial-scale=1.0">
-    <title>sfthriftstore</title>
-    <link rel="stylesheet" href="/css/style.css">
-</head>
-<body>
+
 
 <%- include("partials/header") %>
 
@@ -101,7 +92,7 @@ content="width=device-width, initial-scale=1.0">
 
                 <img
 
-                src="/uploads/<%= product.image %>"
+                src="<%= product.image %>"
 
                 alt="<%= product.name %>">
 
@@ -147,5 +138,3 @@ content="width=device-width, initial-scale=1.0">
 </section>
 <%- include("partials/footer") %>
 
-</body>
-</html>

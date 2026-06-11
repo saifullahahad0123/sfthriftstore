@@ -12,37 +12,50 @@ const orderRoutes = require("./routes/orderRoutes");
 const Product = require("./models/Product");
 const User = require("./models/User");
 const Order = require("./models/Order");
+const sendEmail = require("./utils/sendEmail");
+const MongoStore = require("connect-mongo").default;
+
 
 connectDB();
 
 const app = express();
+app.use(session({
 
-app.use("/uploads", express.static("uploads"));
+    secret: "thriftsecret",
+
+    resave: false,
+
+    saveUninitialized: false,
+
+    store: MongoStore.create({
+
+        mongoUrl: process.env.MONGO_URI
+    }),
+
+    cookie: {
+
+        maxAge: 2 * 24 * 60 * 60 * 1000
+    }
+}));
+
+app.use((req, res, next) => {
+
+    res.locals.user = req.session?.user || null;
+
+    next();
+});
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static("public"));
 
-app.use( "/uploads", express.static("uploads"));
-app.use(session({ secret: "thriftsecret", resave: false, saveUninitialized: false }));
-
-
 app.set("view engine", "ejs");
 
-app.use((req,res,next) => {
-    res.locals.user = req.user || null; 
-    next();
-});
 
 app.use("/products", productRoutes);
 app.use("/cart", cartRoutes);
 app.use("/", authRoutes);
-app.use("/", orderRoutes);
 
-
-
-
-
-
+app.use("/orders",orderRoutes);
 
 app.get("/", async (req, res) => {
 
@@ -124,7 +137,11 @@ app.get(
 });
 
 
-
+app.get("/products", async (req, res) => {
+    res.render("products", {
+        user: req.session.user
+    });
+});
 
 app.get(
     "/search",
@@ -195,24 +212,7 @@ app.get(
 
 });
 
-app.get("/products", (req, res) => {
-    res.render("products");
-     user: req.session.user
-   
-});
 
-app.get("/product", (req, res) => {
-    res.render("productDetails");
-    user: req.session.user
-   
-});
-
-
-app.get("/cart", (req, res) => {
-    res.render("cart");
-     user: req.session.user
-
-});
 
 
 app.get("/login", (req, res) => {
@@ -226,6 +226,14 @@ app.get("/login", (req, res) => {
 
 app.get("/register", (req, res) => {
         res.render("register", {
+        user: req.session.user
+    });
+
+});
+
+app.get("/contact", (req, res) => {
+
+    res.render("contact", {
         user: req.session.user
     });
 
@@ -344,6 +352,10 @@ app.get(
 
 
 
+
+
+
+
 app.post(
 
     "/admin/orders/status/:id",
@@ -354,15 +366,43 @@ app.post(
 
     try {
 
-        await Order.findByIdAndUpdate(
+        const order =
+        await Order.findById(
 
-            req.params.id,
+            req.params.id
+        );
 
-            {
+        if(!order){
 
-                status:
-                req.body.status
-            }
+            return res.send(
+                "Order not found"
+            );
+        }
+
+        /* UPDATE STATUS */
+
+        order.status =
+        req.body.status;
+
+        await order.save();
+
+        /* SEND EMAIL */
+
+        await sendEmail(
+
+            order.email,
+
+            "Order Status Updated",
+
+`Hello ${order.shippingAddress.fullName},
+
+Your order status has been updated.
+
+New Status:
+${order.status}
+
+Thank you for shopping with SF Thrift Store.
+`
         );
 
         res.redirect(
@@ -375,9 +415,6 @@ app.post(
     }
 
 });
-
-
-
 
 
 

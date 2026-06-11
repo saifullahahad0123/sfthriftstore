@@ -28,7 +28,8 @@
         <h2>Admin Panel</h2>
 
         <ul>
-
+ 
+             <li><a href="/"> Home</a></li>
          <li><a href="/admin">Dashboard</a></li>
 
             <li><a href="/admin/products">Products</a></li>
@@ -89,6 +90,12 @@ method="POST">
 
         </option>
 
+        <option value="Cancelled">
+
+    Cancelled
+
+</option>
+
     </select>
 
     <button type="submit">
@@ -118,23 +125,49 @@ method="POST">
 
                     </p>
 
-                    <p>
+                   <p>
+    Name:
+    <%= order.shippingAddress.fullName %>
+</p>
 
-                        Customer:
-                        <%= order.shippingAddress.fullName %>
+<p>
+    Email:
+    <%= order.shippingAddress.email %>
+</p>
 
-                    </p>
+<p>
+    Phone:
+    <%= order.shippingAddress.phone %>
+</p>
 
-                    <p>Phone:<%= order.shippingAddress.phone %></p>
+<p>
+    Country:
+    <%= order.shippingAddress.country %>
+</p>
 
-                    <p>
+<p>
+    State:
+    <%= order.shippingAddress.state %>
+</p>
 
-                        City:
-                        <%= order.shippingAddress.city %>
+<p>
+    City:
+    <%= order.shippingAddress.city %>
+</p>
 
-                    </p>
+<p>
+    ZIP:
+    <%= order.shippingAddress.zipCode %>
+</p>
+<p>
+    Landmark:
+    <%= order.shippingAddress.landmark %>
+</p>
 
-                    <p>Address:   <%= order.shippingAddress.address %></p>
+<p>
+    Address:
+    <%= order.shippingAddress.address %>
+</p>
 
                     <h3>Products</h3>
 
@@ -144,7 +177,7 @@ method="POST">
 
                             <img
 
-                            src="/uploads/<%= item.image %>"
+                            src="<%= item.image %>"
 
                             width="80"
 
@@ -164,6 +197,22 @@ method="POST">
                                     <%= item.quantity %>
 
                                 </p>
+         <a
+
+href="/orders/delete/<%= order._id %>"
+
+class="delete-order-btn"
+
+onclick="return confirm(
+'Delete this order?'
+)"
+
+>
+
+    Delete
+
+</a>
+
 
                             </div>
 

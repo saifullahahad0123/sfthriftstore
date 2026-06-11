@@ -2,43 +2,61 @@
 
 <section class="orders-page">
 
-    <h1>My Orders</h1>
+    <h1>
+
+        My Orders
+
+    </h1>
 
     <% if(orders.length > 0){ %>
 
         <% orders.forEach(order => { %>
 
             <div class="order-card">
-
+ <p style="color: rgb(226, 31, 31);"> After Shipped order cannot be Cancelled</p>
                 <h2>
+
                     Order Status:
                     <%= order.status %>
+
                 </h2>
 
                 <p>
+
                     Total:
                     ₹<%= order.totalPrice %>
+
                 </p>
 
-                <h3>Products</h3>
+                <h3>
+
+                    Products
+
+                </h3>
 
                 <% order.items.forEach(item => { %>
 
                     <div class="order-item">
 
                         <img
-                        src="/uploads/<%= item.image %>"
+
+                        src="<%= item.image %>"
+
                         alt="">
 
                         <div>
 
                             <p>
+
                                 <%= item.name %>
+
                             </p>
 
                             <p>
+
                                 Quantity:
                                 <%= item.quantity %>
+
                             </p>
 
                         </div>
@@ -47,13 +65,59 @@
 
                 <% }) %>
 
+                <!-- REMOVE BUTTON -->
+
+              <% if(
+    order.status === "Pending"
+    ||
+    order.status === "Processing"
+){ %>
+
+    <a
+    href="/orders/delete/<%= order._id %>"
+    class="delete-order-btn"
+    onclick="return confirm(
+    'Cancel this order?'
+    )">
+
+        Cancel Order
+
+    </a>
+
+   
+
+<% } %>
+
             </div>
 
         <% }) %>
 
     <% } else { %>
 
-        <h2>No Orders Yet</h2>
+        <div class="empty-orders">
+
+            <h2>
+
+                No Orders Yet
+
+            </h2>
+            <br>
+            <br>
+            <br>
+
+            <a
+
+            href="/"
+
+            class="shop-btn"
+
+            >
+
+                Continue Shopping
+
+            </a>
+
+        </div>
 
     <% } %>
 

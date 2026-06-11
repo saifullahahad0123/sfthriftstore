@@ -1,4 +1,5 @@
 const Order = require("../models/Order");
+const sendEmail = require("../utils/sendEmail");
 
 /* CHECKOUT PAGE */
 
@@ -32,6 +33,30 @@ const placeOrder =
 async (req, res) => {
 
     try {
+
+         const emailRegex =
+        /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+        if(
+            !emailRegex.test(req.body.email)
+        ){
+            return res.send(
+                "Please enter a valid email address"
+            );
+        }
+
+        /* VALIDATE PHONE */
+
+        const phoneRegex =
+        /^[0-9]{10}$/;
+
+        if(
+            !phoneRegex.test(req.body.phone)
+        ){
+            return res.send(
+                "Please enter a valid 10-digit phone number"
+            );
+        }
 
         const cart =
         req.session.cart || [];
@@ -80,23 +105,52 @@ async (req, res) => {
 
             shippingAddress: {
 
-                fullName:
-                req.body.fullName,
+    fullName: req.body.fullName,
 
-                phone:
-                req.body.phone,
+    email: req.body.email,
 
-                city:
-                req.body.city,
+    phone: req.body.phone,
 
-                address:
-                req.body.address
-            },
+    country: req.body.country,
+
+    state: req.body.state,
+
+    city: req.body.city,
+
+    zipCode: req.body.zipCode,
+
+    landmark: req.body.landmark,
+
+    address: req.body.address
+},
+            email:
+                 req.session.user.email,
 
             totalPrice: total
         });
 
         await newOrder.save();
+
+await sendEmail(
+
+    process.env.ADMIN_EMAIL,
+
+    "New Order Received",
+
+`Customer:
+${req.session.user.name}
+
+Phone:
+${req.body.phone}
+
+Address:
+${req.body.address}
+
+A new order has been placed.`
+);
+
+
+
 
         /* CLEAR CART */
 
@@ -139,11 +193,104 @@ async (req, res) => {
     }
 };
 
+
+const deleteOrder =
+async (req, res) => {
+
+    try {
+
+        const order =
+        await Order.findById(
+
+            req.params.id
+        );
+
+        /* ORDER ALREADY DELETED */
+
+        if(!order){
+
+            return res.redirect(
+                "/orders"
+            );
+        }
+
+        /* ADMIN CAN DELETE ANY ORDER */
+
+        if(
+
+        req.session.user.isAdmin
+
+        ){
+
+            await Order.findByIdAndDelete(
+
+                req.params.id
+            );
+
+            return res.redirect(
+                "/admin/orders"
+            );
+        }
+
+        /* CUSTOMER CAN DELETE ONLY OWN ORDER */
+
+        if(
+
+order.user.toString()
+
+===
+
+req.session.user.id
+
+){
+
+    /* ALLOW ONLY PENDING OR PROCESSING */
+
+    if(
+
+        order.status !== "Pending"
+
+        &&
+
+        order.status !== "Processing"
+
+    ){
+
+        return res.send(
+
+            "This order can no longer be cancelled."
+
+        );
+    }
+
+    await Order.findByIdAndDelete(
+
+        req.params.id
+    );
+
+    return res.redirect(
+        "/orders"
+    );
+}
+
+        res.send(
+            "Access Denied"
+        );
+
+    } catch (error) {
+
+        console.log(error);
+    }
+};
+
+
 module.exports = {
 
     checkoutPage,
 
     placeOrder,
 
-    userOrders
+    userOrders,
+
+    deleteOrder
 };

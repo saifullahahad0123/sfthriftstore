@@ -1,9 +1,20 @@
-const express = require("express");
+const express =
+require("express");
 
-const router = express.Router();
+const router =
+express.Router();
 
-const multer = require("multer");
+const multer =
+require("multer");
 
+const cloudinary =
+require("../config/cloudinary");
+
+const {
+CloudinaryStorage
+} = require(
+"multer-storage-cloudinary"
+);
 
 const {
 
@@ -18,52 +29,71 @@ const {
     updateProduct
 
 } = require(
-    "../controllers/productController"
+"../controllers/productController"
 );
-
 
 /* STORAGE */
 
-const storage = multer.diskStorage({
+const storage =
+new CloudinaryStorage({
 
-    destination: function(req, file, cb){
+    cloudinary,
 
-        cb(null, "uploads/");
-    },
+    params: {
 
-    filename: function(req, file, cb){
+        folder:
+        "thrift-shop",
 
-        cb(
-            null,
-            Date.now() + "-" + file.originalname
-        );
+        allowed_formats: [
+
+            "jpg",
+
+            "jpeg",
+
+            "png"
+        ]
     }
-
 });
 
-const upload = multer({ storage });
+const upload =
+multer({
+
+    storage
+});
 
 /* ROUTES */
 
 router.post(
+
     "/add",
+
     upload.single("image"),
+
     addProduct
 );
 
-router.get("/", getProducts);
+router.get(
+
+    "/",
+
+    getProducts
+);
 
 /* DELETE */
 
 router.get(
+
     "/delete/:id",
+
     deleteProduct
 );
 
 /* EDIT PAGE */
 
 router.get(
+
     "/edit/:id",
+
     editProductPage
 );
 
@@ -78,5 +108,5 @@ router.post(
     updateProduct
 );
 
-
-module.exports = router;
+module.exports =
+router;

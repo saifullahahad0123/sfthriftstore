@@ -10,83 +10,107 @@
 <body>
 
     <nav class="navbar">
-<div class="logo">
 
-    <a href="/">
+    <!-- LOGO -->
+    <div class="logo">
+        <a href="/">
+            <img src="/images/sfthriftstore.jpg" alt="Logo">
+        </a>
+        <span style="font-size:x-large;">sfthriftstore</span>
+    </div>
+   
 
-        <img
-
-        src="/images/sfthriftstore.jpg"
-
-        alt="Logo">
-
-    </a>
-
-</div>
-        <div class="logo">
-            sfthriftstore
-        </div>
-
-        <form
-action="/search"
-method="GET"
-class="search-form">
+    <form action="/search" method="GET" class="classic-search">
 
     <input
+        type="text"
+        name="query"
+        placeholder="Search products..."
+        required
+    >
 
-    type="text"
-
-    name="query"
-
-    placeholder="Search products...">
-
-    <button type="submit">
-
-        Search
-
-    </button>
+   <button type="submit" class="img-btn">
+    🔍
+</button>
 
 </form>
 
-      <ul class="nav-links">
+    <div class="menu-toggle" onclick="toggleMenu(this)">
+    ☰
+</div>
 
-    <li><a href="/">Home</a></li>
+    <!-- LINKS -->
+    <ul class="nav-links" id="nav-links">
 
-<li><a href="/orders">Orders</a></li>
-    <li><a href="/cart">Cart</a></li>
+        <li><a href="/">Home</a></li>
+       <li> <a href="/products">Shop</a></li> 
+        <li><a href="/orders">Orders</a></li>
+        <li><a href="/cart">Cart</a></li>
+        <li><a href="/contact"> Contact</a></li>
 
+   
 
-<% if(user && user.isAdmin){ %>
+        <% if(user?.isAdmin){ %>
+            <li><a href="/admin">Admin</a></li>
+        <% } %>
 
-    <li>
-        <a href="/admin">
-            Admin
-        </a>
-    </li>
+       
+
+        <% if(user){ %>
+
+<li class="profile">
+
+    <a href="#" onclick="toggleProfile(event)">
+        HELLO <%= user.name.toUpperCase() %>
+    </a>
+
+    <ul class="dropdown" id="profileMenu">
+
+        <li><a href="/orders">My Orders</a></li>
+
+        <% if(user.isAdmin){ %>
+            <li><a href="/admin">Admin Panel</a></li>
+        <% } %>
+
+        <li><a href="/logout">Logout</a></li>
+
+    </ul>
+
+</li>
+
+<% } else { %>
+
+<li><a href="/login">Login</a></li>
 
 <% } %>
 
+    </ul>
 
+</nav>
 
+<script>
 
-    <% if(typeof user !== 'undefined ' && user ){ %>
+function toggleMenu(btn) {
 
-        <li>
-            <a href="/logout">
-                Logout
-            </a>
-        </li>
+    const menu = document.getElementById("nav-links");
 
-    <% } else { %>
+    menu.classList.toggle("active");
 
-        <li>
-            <a href="/login">
-                Login
-            </a>
-        </li>
+    btn.classList.toggle("open");
 
-    <% } %>
+    btn.innerHTML = menu.classList.contains("active")
+        ? "✖"
+        : "☰";
+}
 
-</ul>
+/* PROFILE DROPDOWN */
+function toggleProfile(e){
 
-    </nav>
+    e.preventDefault();
+
+    document.getElementById("profileMenu")
+    .classList.toggle("show");
+}
+
+</script>
+</body>

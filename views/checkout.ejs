@@ -11,36 +11,26 @@
         <div class="checkout-form">
 
             <form
-            action="/place-order"
+            action="/orders/place-order"
             method="POST">
 
-                <input
-                    type="text"
-                    name="fullName"
-                    placeholder="Full Name"
-                    required
-                >
+               <input type="text" name="fullName" placeholder="Full Name" required>
 
-                <input
-                    type="text"
-                    name="phone"
-                    placeholder="Phone Number"
-                    required
-                >
+<input type="email" name="email" placeholder="Email" required>
 
-                <input
-                    type="text"
-                    name="city"
-                    placeholder="City"
-                    required
-                >
+<input type="tel" name="phone" placeholder="Phone Number" required>
 
-                <textarea
-                    name="address"
-                    rows="5"
-                    placeholder="Address"
-                    required
-                ></textarea>
+<input type="text" name="country" placeholder="Country" required>
+
+<input type="text" name="state" placeholder="State" required>
+
+<input type="text" name="city" placeholder="City" required>
+
+<input type="text" name="zipCode" placeholder="ZIP Code" required>
+
+<input type="text" name="landmark" placeholder="Landmark" >
+
+<textarea name="address" placeholder="Full Address" required></textarea>
 
                 <button type="submit">
 
@@ -79,9 +69,15 @@
                 <h3>Total:</h3>
 
                 <h3> ₹<%= total %></h3>
+                
 
             </div>
 
+            <br><hr><br>
+            <h2 style="color: rgb(230, 36, 36);"> PAY AFTER CONFIRMATION</h2>
+
+            
+               
         </div>
 
     </div>

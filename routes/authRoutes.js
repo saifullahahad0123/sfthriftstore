@@ -8,11 +8,25 @@ const {
 
     loginUser,
 
-    logoutUser
+    logoutUser,
+     verifyOtp
 
 } = require("../controllers/authController");
 
 /* REGISTER */
+
+router.get(
+    "/verify-otp",
+    (req, res) => {
+
+        res.render("verifyOtp");
+    }
+);
+
+router.post(
+    "/verify-otp",
+    verifyOtp
+);
 
 router.post(
     "/register",

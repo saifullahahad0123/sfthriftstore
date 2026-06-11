@@ -10,7 +10,11 @@ const {
 
     placeOrder,
 
-    userOrders
+    userOrders,
+
+    deleteOrder
+
+
 
 } = require(
     "../controllers/orderController"
@@ -40,12 +44,22 @@ router.post(
 
 
 
+
+
 router.get(
-    "/orders",
+
+    "/",
 
     isLoggedIn,
 
     userOrders
+);
+
+router.get(
+
+    "/delete/:id",
+
+    deleteOrder
 );
 
 module.exports = router;

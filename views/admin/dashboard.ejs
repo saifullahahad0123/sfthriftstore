@@ -24,6 +24,7 @@
         <h2>Admin Panel</h2>
 
         <ul>
+             <li><a href="/">Home</a></li>
 
          <li><a href="/admin">Dashboard</a></li>
 
@@ -34,7 +35,7 @@
             <li><a href="/admin/users">Users </a></li>
 
             <li> <a href="/logout">Logout</a></li>
-
+            
         </ul>
 
     </div>
@@ -104,9 +105,10 @@
 <tr>
 
     <td>
-
+  <!-- src="/uploads/<%= product.image %>" -->
         <img
-        src="/uploads/<%= product.image %>"
+       
+        src="<%= product.image %>"
         width="70"
         alt="">
 

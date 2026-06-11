@@ -1,6 +1,7 @@
 const bcrypt = require("bcryptjs");
 
 const User = require("../models/User");
+const sendEmail = require("../utils/sendEmail");
 
 /* REGISTER */
 
@@ -47,13 +48,73 @@ const registerUser = async (req, res) => {
 
         await user.save();
 
-        res.redirect("/login");
+        const otp = Math.floor(
+    100000 + Math.random() * 900000
+);
+
+req.session.otp = otp;
+req.session.userId = user._id;
+
+await sendEmail(
+
+    user.email,
+
+    "Verify Your Email Address – SF Thrift Store",
+
+`Hello ${user.name},
+
+Thank you for creating an account with SF Thrift Store.
+
+To complete your registration and verify your email address, please use the One-Time Password (OTP) below:
+
+OTP: ${otp}
+
+This OTP is valid for 10 minutes.
+
+For your security, please do not share this code with anyone.
+
+If you did not create an account with SF Thrift Store, please ignore this email.
+
+Thank you,
+
+SF Thrift Store Team`
+);
+
+res.redirect("/verify-otp");
+
+      
 
     } catch (error) {
 
         console.log(error);
     }
 
+};
+
+const verifyOtp = async (req, res) => {
+
+    if(
+        req.body.otp ==
+        req.session.otp
+    ){
+
+        const user =
+        await User.findById(
+            req.session.userId
+        );
+
+        user.isVerified = true;
+
+        await user.save();
+
+        return res.redirect(
+            "/login"
+        );
+    }
+
+    res.send(
+        "Invalid OTP"
+    );
 };
 
 /* LOGIN */
@@ -97,6 +158,7 @@ const loginUser = async (req, res) => {
             id: user._id,
 
             name: user.name,
+             email: user.email,
 
             isAdmin: user.isAdmin
         };
@@ -125,5 +187,6 @@ module.exports = {
 
     loginUser,
 
-    logoutUser
+    logoutUser,
+    verifyOtp
 };

@@ -14,7 +14,7 @@ const addProduct = async (req, res) => {
 
             category: req.body.category,
 
-            image: req.file.filename,
+            image:req.file.path,
 
             description: req.body.description
 
@@ -113,7 +113,7 @@ async (req, res) => {
         if(req.file){
 
             updatedData.image =
-            req.file.filename;
+            req.file.path;
         }
 
         await Product.findByIdAndUpdate(
