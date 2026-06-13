@@ -190,6 +190,118 @@ const loginUser = async (req, res) => {
 
 };
 
+
+const forgotPasswordPage =
+(req, res) => {
+
+    res.render(
+        "forgotPassword"
+    );
+};
+
+
+const sendResetOtp =
+async (req, res) => {
+
+    const user =
+    await User.findOne({
+
+        email:
+        req.body.email
+    });
+
+    if(!user){
+
+        return res.send(
+            "Email not found"
+        );
+    }
+
+    const otp =
+    Math.floor(
+        100000 +
+        Math.random() *
+        900000
+    );
+
+    req.session.resetOtp =
+    otp;
+
+    req.session.resetUserId =
+    user._id;
+
+    await sendEmail(
+
+        user.email,
+
+        "Password Reset OTP",
+
+`Your OTP is:
+
+${otp}
+
+Do not share it with anyone.`
+    );
+
+    res.redirect(
+        "/reset-password"
+    );
+};
+
+const resetPasswordPage =
+(req, res) => {
+
+    res.render(
+        "resetPassword"
+    );
+};
+
+
+const resetPassword =
+async (req, res) => {
+
+    if(
+
+        req.body.otp !=
+        req.session.resetOtp
+
+    ){
+
+        return res.send(
+            "Invalid OTP"
+        );
+    }
+
+    const user =
+    await User.findById(
+
+        req.session.resetUserId
+    );
+
+    const salt =
+    await bcrypt.genSalt(10);
+
+    user.password =
+    await bcrypt.hash(
+
+        req.body.password,
+
+        salt
+    );
+
+    await user.save();
+
+    req.session.resetOtp =
+    null;
+
+    req.session.resetUserId =
+    null;
+
+    res.redirect(
+        "/login"
+    );
+};
+
 /* LOGOUT */
 
 const logoutUser = (req, res) => {
@@ -206,5 +318,12 @@ module.exports = {
     loginUser,
 
     logoutUser,
-    verifyOtp
+    verifyOtp,
+    forgotPasswordPage,
+
+    sendResetOtp,
+
+    resetPasswordPage,
+
+    resetPassword
 };
